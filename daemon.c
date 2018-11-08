@@ -139,23 +139,24 @@ void randomise(int* buf, int bufSize, char* fName, char* dirName)
     struct sysinfo info;
     sysinfo(&info);	
     
-    if (clock1 % 2 == 0)
-    {
-      if ((fd = OpenFile("meminfo", "./../../proc/")) !=  NULL)
-      {
-        for(k = 0; k < rand() % 48; k++)
-        {
-          fscanf(fd, "%s", rmi_name_buf);
-          fscanf(fd, "%li", &random_mem_info);
-        }
-      }
-      CloseFile(fd);
-    }
+    
     for(j = 0; j < rand() % shift; j++)
     {
-      buf[i] +=(int) ((random_mem_info * rand() ^ idle) * info.bufferram ^ rand() * (info.bufferram * uptime) ^ info.procs);
+      if (clock1 % 2 == 0)
+      {
+        if ((fd = OpenFile("meminfo", "./../../proc/")) !=  NULL)
+        {
+          int n = rand() % 48 + 1;
+          for(k = 0; k < n; k++)
+          {
+            fscanf(fd, "%s", rmi_name_buf);
+            fscanf(fd, "%li", &random_mem_info);
+          }
+        }
+        CloseFile(fd);
+      }
+      buf[i] +=(int) ((rand() ^ (idle ^ random_mem_info)) * info.bufferram ^ rand() * (info.bufferram * uptime) ^ info.procs);
     }
-  }
   free(randBuf);
   
 }
