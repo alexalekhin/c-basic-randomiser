@@ -3,7 +3,7 @@
 make
 
 ./daemon start
-sleep 10
+sleep 30
 ./daemon stop
 sleep 60
 
