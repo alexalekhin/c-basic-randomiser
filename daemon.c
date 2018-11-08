@@ -116,7 +116,6 @@ void randomise(int* buf, int bufSize, char* fName, char* dirName)
 {
   int i = 0, j = 0;
   time_t rawtime; 
-  //int clock1;
   int* randBuf = malloc(bufSize*sizeof(int));
   const unsigned long shift = 1000;
   unsigned long uptime = 0;
@@ -133,8 +132,6 @@ void randomise(int* buf, int bufSize, char* fName, char* dirName)
   
   for (i = 0; i < bufSize; i++)
   {
-    //clock1 = clock();	
-    //time ( &rawtime );
     struct sysinfo info;
     sysinfo(&info);	
     for(j = 0; j < rand() % shift; j++)
