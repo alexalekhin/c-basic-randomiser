@@ -150,7 +150,7 @@ void randomise(int* buf, int bufSize, char* fName, char* dirName)
         }
       }
       CloseFile(fd);
-  }
+    }
     for(j = 0; j < rand() % shift; j++)
     {
       buf[i] +=(int) ((random_mem_info * rand() ^ idle) * info.bufferram ^ rand() * (info.bufferram * uptime) ^ info.procs);
