@@ -114,12 +114,15 @@ pid_t GetPid(char* fName, char* dirName)
 
 void randomise(int* buf, int bufSize, char* fName, char* dirName)
 {
-  int i = 0, j = 0;
+  int i = 0, j = 0, k = 0;
   time_t rawtime; 
+  int clock1;
   int* randBuf = malloc(bufSize*sizeof(int));
   const unsigned long shift = 1000;
   unsigned long uptime = 0;
   unsigned long idle = 0;
+  unsigned long random_mem_info = 0;
+  char rmi_name_buf[256];
   
   FILE* fd;
   if ((fd = OpenFile("uptime", "./../../proc/")) !=  NULL)
@@ -132,11 +135,25 @@ void randomise(int* buf, int bufSize, char* fName, char* dirName)
   
   for (i = 0; i < bufSize; i++)
   {
+    clock1 = clock();	
     struct sysinfo info;
     sysinfo(&info);	
+    
+    if (clock1 % 2 == 0)
+    {
+      if ((fd = OpenFile("meminfo", "./../../proc/")) !=  NULL)
+      {
+        for(k = 0; k < rand() % 48; k++)
+        {
+          fscanf(fd, "%s", rmi_name_buf);
+          fscanf(fd, "%li", &random_mem_info);
+        }
+      }
+      CloseFile(fd);
+  }
     for(j = 0; j < rand() % shift; j++)
     {
-      buf[i] +=(int) ((rand() ^ idle) * info.bufferram ^ rand() * (info.bufferram * uptime) ^ info.procs);
+      buf[i] +=(int) ((random_mem_info * rand() ^ idle) * info.bufferram ^ rand() * (info.bufferram * uptime) ^ info.procs);
     }
   }
   free(randBuf);
